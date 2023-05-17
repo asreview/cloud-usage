@@ -1,0 +1,36 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: tasker
+spec:
+  # ttlSecondsAfterFinished: 30 # Automatically delete after 30 seconds
+  template:
+    metadata:
+      name: tasker
+    spec:
+      containers:
+        - name: c
+          image: abelsiqueira/tasker
+          volumeMounts:
+            - name: asreview-storage
+              mountPath: /app/workdir
+          env:
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-default-user
+                  key: username
+            - name: RABBITMQ_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-default-user
+                  key: password
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: RABBITMQ_PORT
+              value: "5672"
+      restartPolicy: OnFailure
+      volumes:
+        - name: asreview-storage
+          persistentVolumeClaim:
+            claimName: asreview-storage

@@ -1,0 +1,6 @@
+# kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
+# See docs: https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html
+apiVersion: rabbitmq.com/v1beta1
+kind: RabbitmqCluster
+metadata:
+  name: rabbitmq

@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: asreview-worker
+spec:
+  replicas: 8
+  selector:
+    matchLabels:
+      app: asreview-worker
+  template:
+    metadata:
+      labels:
+        app: asreview-worker
+    spec:
+      containers:
+        - name: c
+          image: abelsiqueira/worker
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: asreview-storage
+              mountPath: /app/workdir
+          env:
+            - name: RABBITMQ_USER
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-default-user
+                  key: username
+            - name: RABBITMQ_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-default-user
+                  key: password
+            - name: RABBITMQ_HOST
+              value: rabbitmq
+            - name: RABBITMQ_PORT
+              value: "5672"
+      restartPolicy: Always
+      volumes:
+        - name: asreview-storage
+          persistentVolumeClaim:
+            claimName: asreview-storage
