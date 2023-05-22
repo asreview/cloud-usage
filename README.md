@@ -36,11 +36,40 @@ You should have the `kubectl` command as well.
 
 ## Install on SURF
 
-TODO
+Create a workspace with "Ubuntu 20.04 (SUDO enabled)".
+
+Install docker following [the official documentation](https://docs.docker.com/engine/install/ubuntu/).
+Then, add your user to the docker group:
+
+```bash
+sudo usermod -aG docker $USER
+```
+
+Log out and log in again.
+
+Download minikube and install it.
+Following the [official documentation](https://minikube.sigs.k8s.io/docs/start/) at the time of writing, you can run:
+
+```bash
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+sudo dpkg -i minikube_latest_amd64.deb
+```
+
+Install `kubectl` following the [official documentation](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-using-native-package-management), **however, fix the curl command** following [this issue](https://github.com/kubernetes/release/issues/2862):
+
+```bash
+sudo apt-get update
+sudo apt-get install -y ca-certificates curl
+# sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+sudo curl -fsSLo /etc/apt/keyrings/kubernetes-archive-keyring.gpg https://dl.k8s.io/apt/doc/apt-key.gpg
+sudo apt-get update
+sudo apt-get install -y kubectl
+```
 
 ## Start minikube and install RabbitMQ
 
-You can read more on installing [RabbitMQ Cluster Operator](https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html).
+We need to install and run RabbitMQ on Kubernetes.
+Run the following commands takes from [RabbitMQ Cluster Operator](https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html), and then the `rabbitmq.yml` service.
 
 ```bash
 minikube start
@@ -53,6 +82,7 @@ kubectl apply -f rabbitmq.yml
 The volume is necessary to hold the `data`, `scripts`, and the `output`.
 
 ```bash
+minikube ssh -- sudo mkdir -p /mnt/asreview-storage
 kubectl apply -f volume.yml
 ```
 
@@ -138,3 +168,4 @@ You can copy the `output` folder from the volume with
 ```bash
 kubectl cp asreview-worker-FULL-NAME:/app/workdir/output ./output
 ```
+
