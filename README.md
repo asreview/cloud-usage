@@ -23,9 +23,9 @@ The more convoluted explanation is:
 - When the worker completes the command, it sends a message back to the `tasker-send.py`, so it can keep track of what was executed.
 - `tasker-send.py` will block the execution of further commands until `FILE` is completed.
 - Another possible command is `python split-file.py FILE`, which reads the `FILE` and creates three new files:
-  - `FILE.part1` contains every command before the first line containing the word `simulate`.
+  - `FILE.part1` contains every command with "mkdir" and "describe", and everything before the first `simulate` line.
   - `FILE.part2` contains every `simulate` line.
-  - `FILE.part3` contains all other lines.
+  - `FILE.part3` contains every other command.
 - The most basic workflow is to take the Makita `jobs.sh`, split it into three, run the first part directly with the tasker (to create folders), then send the second part with `tasker-send.py`, and finally send the third part as well.
 
 ## Installing locally
@@ -251,3 +251,25 @@ Of course, if you modify the `.sh` or `.py` files, you have to build the corresp
 > The default **tasker** deletes the whole workdir folder to make sure that it is clean when it starts.
 > If you don't want this behaviour, look for the "rm -rf" line and comment it out or remove it.
 > However, if you run into a "Project already exists" error, this is why.
+
+## Troubleshooting and FAQ
+
+### After running the tasker, the workers are in CrashLoopBackOff/Error
+
+Probably some command in the tasker resulted in the worker failure, and now the queue is populated and the worker keep trying and failing.
+Looking at the logs of the worker should give insight in the real issue.
+
+To verify if you have a queue issue, run
+
+```bash
+kubectl exec rabbitmq-server-0 -- rabbitmqctl list_queues
+```
+
+If any of the queues has more than 0 messages, then this confirms the issue.
+Delete the queue with messages:
+
+```bash
+kubectl exec rabbitmq-server-0 -- rabbitmqctl delete_queue asreview_queue
+```
+
+You should see the workers go back to "Running" state.

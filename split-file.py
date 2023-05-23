@@ -7,31 +7,51 @@ if len(sys.argv) < 2:
 
 file_name = sys.argv[1]
 
-with open(file_name, "r") as f:
+with open(file_name, "r", encoding="utf-8") as f:
     content = f.readlines()
 
 # Find the index of the first occurrence of the word "simulate"
-simulate_index = -1
+first_simulate_index = -1
+last_simulate_index = len(content) - 1
 for i, line in enumerate(content):
     if "simulate" in line:
-        simulate_index = i
-        break
+        if first_simulate_index == -1:
+            first_simulate_index = i
+        last_simulate_index = i
 
-if simulate_index == -1:
+if first_simulate_index == -1:
     print("The word 'simulate' was not found in the file.")
     exit()
 
-# Split the content into three parts
-part1 = "".join(line for line in content[:simulate_index])
-part2 = "".join(line for line in content[simulate_index:] if "simulate" in line)
-part3 = "".join(line for line in content[simulate_index:] if "simulate" not in line)
+
+def useless(line):
+    return len(line.strip()) == 0 or line[0] == "#"
+
+
+def assign_file(line, line_index):
+    if useless(line):
+        return 0
+
+    if line_index < first_simulate_index:
+        return 1
+    elif line_index > last_simulate_index:
+        return 3
+
+    if any(s in line for s in ["mkdir", "describe"]):
+        return 1
+    elif "simulate" in line:
+        return 2
+    else:
+        return 3
+
 
 # Write each part to a separate file
-with open(file_name + ".part1", "w") as f:
-    f.write(part1)
-
-with open(file_name + ".part2", "w") as f:
-    f.write(part2)
-
-with open(file_name + ".part3", "w") as f:
-    f.write(part3)
+for i in range(1, 4):
+    with open(file_name + f".part{i}", "w", encoding="utf-8") as f:
+        f.write(
+            "".join(
+                line
+                for (line_index, line) in enumerate(content)
+                if assign_file(line, line_index) == i
+            )
+        )
