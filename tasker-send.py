@@ -19,7 +19,11 @@ class Tasker(object):
 
         credentials = pika.PlainCredentials(RABBITMQ_USER, RABBITMQ_PASS)
         parameters = pika.ConnectionParameters(
-            RABBITMQ_HOST, RABBITMQ_PORT, "/", credentials
+            RABBITMQ_HOST,
+            RABBITMQ_PORT,
+            "/",
+            credentials,
+            heartbeat=3600,
         )
 
         self.connection = pika.BlockingConnection(parameters)
