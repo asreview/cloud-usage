@@ -7,7 +7,7 @@ if len(sys.argv) < 2:
 
 file_name = sys.argv[1]
 
-with open(file_name, 'r') as f:
+with open(file_name, "r") as f:
     content = f.readlines()
 
 # Find the index of the first occurrence of the word "simulate"
@@ -27,11 +27,11 @@ part2 = "".join(line for line in content[simulate_index:] if "simulate" in line)
 part3 = "".join(line for line in content[simulate_index:] if "simulate" not in line)
 
 # Write each part to a separate file
-with open(file_name + ".part1", 'w') as f:
+with open(file_name + ".part1", "w") as f:
     f.write(part1)
 
-with open(file_name + ".part2", 'w') as f:
+with open(file_name + ".part2", "w") as f:
     f.write(part2)
 
-with open(file_name + ".part3", 'w') as f:
+with open(file_name + ".part3", "w") as f:
     f.write(part3)

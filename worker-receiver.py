@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 import os
-import pika
-import time
 import subprocess
 import sys
+
+import pika
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
 RABBITMQ_PORT = int(os.environ.get("RABBITMQ_PORT", "5672"))
@@ -11,7 +11,7 @@ RABBITMQ_USER = os.environ.get("RABBITMQ_USER", "guest")
 RABBITMQ_PASS = os.environ.get("RABBITMQ_PASS", "guest")
 
 
-class Worker():
+class Worker:
     def __init__(self):
         print(f"Logging as {RABBITMQ_USER}")
 

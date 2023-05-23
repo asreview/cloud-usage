@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 import os
-import pika
-import time
 import sys
+
+import pika
 
 RABBITMQ_HOST = os.environ.get("RABBITMQ_HOST", "localhost")
 RABBITMQ_PORT = int(os.environ.get("RABBITMQ_PORT", "5672"))
@@ -46,7 +46,9 @@ class Tasker(object):
                 )
                 self.sent_messages += 1
 
-        channel.basic_consume("tasker", on_message_callback=self.callback, auto_ack=True)
+        channel.basic_consume(
+            "tasker", on_message_callback=self.callback, auto_ack=True
+        )
         channel.start_consuming()
 
     def callback(self, ch, method, properties, body):
