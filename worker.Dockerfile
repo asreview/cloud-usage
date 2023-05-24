@@ -13,5 +13,11 @@ ENV PYTHONUNBUFFERED=1
 WORKDIR /app/workdir
 #### Don't modify above this line
 
+# For sbert:
+# RUN pip install --user sentence-transformers~=2.2.2
+
+# For doc2vec:
+RUN pip install --user gensim~=4.2.0
+
 #### Don't modify below this line
 ENTRYPOINT [ "/bin/bash", "/app/worker.sh" ]
