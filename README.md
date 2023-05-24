@@ -11,7 +11,7 @@ For more advanced usage, for instance, using an existing Kubernetes cluster, we 
 
 The basic explanation of how this work is: one core of the machine reads the `jobs.sh` Makita file and sends each line to a different core of the machine.
 
-The more convoluted explanation is:
+The more convoluted explanation is below:
 
 - We have various _worker_ pods.
 - We have a _tasker_ pod.
@@ -27,6 +27,10 @@ The more convoluted explanation is:
   - `FILE.part2` contains every `simulate` line.
   - `FILE.part3` contains every other command.
 - The most basic workflow is to take the Makita `jobs.sh`, split it into three, run the first part directly with the tasker (to create folders), then send the second part with `tasker-send.py`, and finally send the third part as well.
+
+The visual representation (which is not very helpful by itself) is below:
+
+![Workflow representation](workflow.jpg)
 
 ## Installing locally
 
