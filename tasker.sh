@@ -8,7 +8,7 @@ then
 fi
 
 # Clean workdir. Ensures that we are always starting anew
-rm -rf ./*
+rm -rf /app/workdir/*
 
 # Copy files from the parent folder for the workdir.
 cp ../*.sh ../*.py ./
