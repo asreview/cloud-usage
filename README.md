@@ -221,6 +221,10 @@ You can copy the `output` folder from the volume with
 kubectl cp asreview-worker-FULL-NAME:/app/workdir/output ./output
 ```
 
+Also, check the `/app/workdir/issues` folder.
+It should be empty, because it contains errors while running the simulate code.
+If it is not empty, the infringing lines will be shown.
+
 ## Deleting and restarting
 
 If you plan to make modifications to the tasker or the worker, they have to be deleted, respectivelly.

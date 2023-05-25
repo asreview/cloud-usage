@@ -13,6 +13,7 @@ rm -rf /app/workdir/*
 # Copy files from the parent folder for the workdir.
 cp ../*.sh ../*.py ./
 cp -r ../data ./
+mkdir issues
 
 # Create a logging function
 function log {
