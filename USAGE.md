@@ -32,6 +32,12 @@ cp -f examples/custom_arfi_synergy/* .
 
 Then, modify `SETTINGS` in `tasker.sh` to your liking.
 
+> **Note**
+>
+> Since this model runs all files, it is advisable to test the execution with a single simulate call from each file.
+> To do that, run `cp custom_arfi.txt.template.test custom_arfi.txt.template` before building your images.
+> It might also help to remove the larger files Brouwer_2019.csv and Walker_2018csv.
+
 ### More details
 
 The `custom_arfi.txt.template` file has the following modifications from the basic ARFI template:
