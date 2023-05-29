@@ -41,6 +41,14 @@ class Worker:
         cmd = body.decode()
         print("=> Received %r" % cmd)
         try:
+            if "simulate" in cmd:
+                split_cmd = cmd.split()
+                idx = split_cmd.index("-s")
+                filename = f"{split_cmd[idx + 1]}.tmp"
+                if os.path.exists(filename):
+                    print("Delete tmp file")
+                    shutil.rmtree(filename)
+
             subprocess.run(
                 cmd,
                 check=True,
@@ -48,22 +56,18 @@ class Worker:
             )
 
             print("✓ Done")
-            ch.basic_publish("", routing_key=properties.reply_to, body=body)
-            ch.basic_ack(delivery_tag=method.delivery_tag)
         except Exception as err:
-            if "simulate" in cmd:
-                split_cmd = cmd.split()
-                idx = split_cmd.index("-s")
-                filename = split_cmd[idx + 1]
-                shutil.rmtree(f"{filename}.tmp")
+            if not os.path.exists("issues"):
+                os.mkdir("issues")
+            with open(f"issues/{RABBITMQ_USER}.txt", "a", encoding="utf-8") as f:
+                f.write(cmd)
+                f.write(f" msg: {str(err)}")
+                f.write("--------")
+            print("x Error. Storing issue on folder issues/")
 
-                with open(f"issues/{RABBITMQ_USER}.txt", "a", encoding="utf-8") as f:
-                    f.write(cmd)
-                print("x Error on simulate, deleting tmp file, storing file on issues/")
-                ch.basic_publish("", routing_key=properties.reply_to, body=body)
-                ch.basic_ack(delivery_tag=method.delivery_tag)
-            else:
-                raise err
+        ch.basic_publish("", routing_key=properties.reply_to, body=body)
+        ch.basic_ack(delivery_tag=method.delivery_tag)
+
 
 if __name__ == "__main__":
     try:
