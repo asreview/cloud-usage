@@ -11,6 +11,12 @@ RUN pip install synergy-dataset
 RUN mkdir -p /app/data
 RUN synergy get -l -o ./app/data
 
+# Temporary, while a new release is not done
+RUN apt-get update && \
+    apt-get install -y git && \
+    rm -rf /var/lib/apt/lists/* && \
+    pip install --upgrade git+https://github.com/abelsiqueira/asreview-makita@patch-1
+
 COPY ./custom_arfi.txt.template /app/custom_arfi.txt.template
 #### Don't modify below this line
 
