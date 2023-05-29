@@ -41,12 +41,8 @@ asreview wordcloud {{ dataset.input_file }} -o {{ output_folder }}/simulation/{{
 # Simulate runs, collect metrics and create plots
 mkdir {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files
 {% for prior in dataset.priors %}
-asreview simulate {{ dataset.input_file }} SETTINGS_PLACEHOLDER -s {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview --prior_record_id {{ " ".join(prior) }} --seed {{ dataset.model_seed }}
-asreview metrics {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview -o {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/metrics/metrics_sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.json
+asreview simulate {{ dataset.input_file }} SETTINGS_PLACEHOLDER -s {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview --prior_record_id {{ " ".join(prior) }} --seed {{ dataset.model_seed }} && asreview metrics {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview -o {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/metrics/metrics_sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.json && rm -f {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview
 {% endfor %}
-
-# Generate plot for dataset
-python {{ scripts_folder }}/get_plot.py -s {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/state_files/ -o {{ output_folder }}/simulation/{{ dataset.input_file_stem }}/plot_recall_sim_{{ dataset.input_file_stem }}.png
 {% endfor %}
 
 # Merge descriptives and metrics

@@ -34,7 +34,11 @@ Then, modify `SETTINGS` in `tasker.sh` to your liking.
 
 ### More details
 
-The `custom_arfi.txt.template` file has a single modification from the basic ARFI template: it adds an argument `SETTINGS_PLACEHOLDER` to the simulate call.
+The `custom_arfi.txt.template` file has the following modifications from the basic ARFI template:
+
+- it adds an argument `SETTINGS_PLACEHOLDER` to the simulate call.
+- it runs `simulate`, `metrics`, and then removes the `.asreview` project file in a single execution. This is done to avoid filling up the disk with `.asreview` files.
+- it does not produce a plot, because the `.asreview` files and not present anymore.
 
 The `tasker.sh` introduces a bash variable `SETTINGS`, which defaults to empty.
 If you want to pass a different classifiers and/or feature extractor, change this variable.
