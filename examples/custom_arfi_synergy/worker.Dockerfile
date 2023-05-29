@@ -6,11 +6,6 @@ RUN apt-get update && \
     && rm -rf /var/lib/apt/lists/* \
     && pip install pika
 
-COPY ./worker-receiver.py /app/worker-receiver.py
-COPY ./worker.sh /app/worker.sh
-
-ENV PYTHONUNBUFFERED=1
-WORKDIR /app/workdir
 #### Don't modify above this line
 
 # For sbert:
@@ -27,4 +22,11 @@ RUN pip install gensim~=4.2.0
 # RUN pip install tensorflow~=2.9.1
 
 #### Don't modify below this line
+
+COPY ./worker-receiver.py /app/worker-receiver.py
+COPY ./worker.sh /app/worker.sh
+
+ENV PYTHONUNBUFFERED=1
+WORKDIR /app/workdir
+
 ENTRYPOINT [ "/bin/bash", "/app/worker.sh" ]
