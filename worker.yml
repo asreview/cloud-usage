@@ -17,8 +17,8 @@ spec:
           image: abelsiqueira/worker
           resources:
             limits:
-              memory: "256Mi"
-              cpu: "500m"
+              memory: "2048Mi"
+              cpu: "1000m"
           volumeMounts:
             - name: asreview-storage
               mountPath: /app/workdir
