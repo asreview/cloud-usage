@@ -101,9 +101,16 @@ We need to install and run RabbitMQ on Kubernetes.
 Run the following commands takes from [RabbitMQ Cluster Operator](https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html), and then the `rabbitmq.yml` service.
 
 ```bash
-minikube start
+minikube start --cpus CPU_NUMBER --memory HOW_MUCH_MEMORY
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 ```
+
+The `CPU_NUMBER` argument is the number of CPUs you want to dedicate to `minikube`.
+The `HOW_MUCH_MEMORY` argument is how much memory.
+
+> **Note**
+>
+> If you are on SURF, you found these values when creating the machine.
 
 ## Clone this repo
 
