@@ -267,6 +267,46 @@ Of course, if you modify the `.sh` or `.py` files, you have to build the corresp
 > If you don't want this behaviour, look for the "rm -rf" line and comment it out or remove it.
 > However, if you run into a "Project already exists" error, this is why.
 
+## Lightweight usage
+In case you want to test how much your given task can be speed-up with parallelization strategy, 
+it is possible to test it utilizing functionality of [GNU Project package](https://www.gnu.org/software/parallel). For such type test follow these steps:
+
+1. Download and install the GNU package following the instructions. We recommend to install the package via package managers if you have one (such as `homebrew` or `chocolatte`), but in case you do not have one you can follow this steps, which are a bit more complicated, but the effect worths it.
+
+* If you are using UNIX based system(Linux or MacOS),you are going to need `wget`.
+Run those commands `parallel-*` will be a downloaded file with a number instead of '*':
+
+```bash
+wget https://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
+sudo tar -xjf parallel-latest.tar.bz2
+cd parallel-*
+./configure
+make
+make install
+```
+
+* If you are using Windows, we suggest following this [guide](https://stackoverflow.com/questions/52393850/how-to-install-gnu-parallel-on-windows-10-using-git-bash#52451011).
+
+2. Run  in your command line to check if the package is installed.
+```bash
+parallel --version
+```
+
+3. To parallelize your `job.sh` file, first you need to split it using this command, so we can use the same strategy
+as was described above, not multiprocessing writing files to directories before creating those:
+
+```bash
+python split-file.py <your_file.sh>
+```
+
+5. Then run this command, specifiing the argument of number of cores. We recommend not to use all of your CPU cores at ones (leave at least one or two) for the sake of your machine safety. 
+   
+```bash
+sh parallel_run.sh <the_number_of_cores>
+
+```
+TODO: the run of bash script for Windows
+
 ## Troubleshooting and FAQ
 
 ### After running the tasker, the workers are in CrashLoopBackOff/Error
