@@ -281,8 +281,8 @@ wget https://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
 sudo tar -xjf parallel-latest.tar.bz2
 cd parallel-*
 ./configure
-make
-make install
+sudo make
+sudo make install
 ```
 
 * If you are using Windows, we suggest following this [guide](https://stackoverflow.com/questions/52393850/how-to-install-gnu-parallel-on-windows-10-using-git-bash#52451011).
