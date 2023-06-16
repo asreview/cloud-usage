@@ -293,8 +293,9 @@ cd parallel-NUMBER
 sudo make
 sudo make install
 ```
+**Windows** 
 
-* If you are using Windows, we suggest following this [guide](https://stackoverflow.com/questions/52393850/how-to-install-gnu-parallel-on-windows-10-using-git-bash#52451011) or install [anaconda environment](https://docs.anaconda.com/free/anaconda/install/index.html) and install the package on it from [here](https://anaconda.org/conda-forge/parallel), but we recommend you using UNIX based setup.
+We suggest following this [guide](https://stackoverflow.com/questions/52393850/how-to-install-gnu-parallel-on-windows-10-using-git-bash#52451011) or install [anaconda environment](https://docs.anaconda.com/free/anaconda/install/index.html) and install the package on this environment from [here](https://anaconda.org/conda-forge/parallel).
 
 2. Run  in your command line to check if the package is installed.
 ```bash
