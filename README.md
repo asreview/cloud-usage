@@ -315,14 +315,8 @@ Then you can just run the script below, specifying the number of cores as an arg
 > Leave at least one or two to allow your machine to process other tasks.
 > Notice that there is no limitation on memory usage per task, so for models that use a lot of memory, there might be some competition for resources.
 
-
-
-   
 ```bash
 bash parallel_run.sh <the_number_of_cores>
-
-```
-TODO: the run of bash script for Windows
 
 ## Troubleshooting and FAQ
 
