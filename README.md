@@ -290,7 +290,7 @@ wget https://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
 tar -xjf parallel-latest.tar.bz2
 cd parallel-NUMBER
 ./configure
-sudo make
+make
 sudo make install
 ```
 **Windows** 
