@@ -267,6 +267,54 @@ Of course, if you modify the `.sh` or `.py` files, you have to build the corresp
 > If you don't want this behaviour, look for the "rm -rf" line and comment it out or remove it.
 > However, if you run into a "Project already exists" error, this is why.
 
+## Lightweight usage
+
+
+If you want to use parallelization, but can't, or don't want to, use Kubernetes, it is possible to use [GNU Project package](https://www.gnu.org/software/parallel) to parallelize the execution of the script locally.
+For such usage follow these steps:
+
+Install the package [GNU parallel](https://www.gnu.org/software/parallel/) following the instructions on the website.
+We recommend installing the package via package managers if you have one (such as `apt-get`, `homebrew` or `chocolatey`).
+
+> **Note**
+>
+> For SURF, that would be `sudo apt-get install parallel`.
+
+In case you do not have one, you can follow the steps below:
+
+* If you are using UNIX based system(Linux or MacOS),you are going to need `wget`.
+Run those commands `parallel-*` will be a downloaded file with a number instead of '*':
+
+```bash
+wget https://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
+tar -xjf parallel-latest.tar.bz2
+cd parallel-NUMBER
+./configure
+make
+sudo make install
+```
+
+Check that the package is installed with
+
+```bash
+parallel --version
+```
+
+To parallelize your `jobs.sh` file, we need to split it into blocks that can be parallelized.
+
+```bash
+python split-file.py <your_file.sh>
+```
+
+Then you can just run the script below, specifying the number of cores as an argument.
+> **Warning**
+> We recommend not using all of your CPU cores at once.
+> Leave at least one or two to allow your machine to process other tasks.
+> Notice that there is no limitation on memory usage per task, so for models that use a lot of memory, there might be some competition for resources.
+
+```bash
+bash parallel_run.sh <the_number_of_cores>
+
 ## Troubleshooting and FAQ
 
 ### After running the tasker, the workers are in CrashLoopBackOff/Error
