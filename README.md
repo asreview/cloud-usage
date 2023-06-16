@@ -304,7 +304,7 @@ python split-file.py <your_file.sh>
 5. Then run this command, specifiing the argument of number of cores. We recommend not to use all of your CPU cores at ones (leave at least one or two) for the sake of your machine safety. 
    
 ```bash
-sh parallel_run.sh <the_number_of_cores>
+bash parallel_run.sh <the_number_of_cores>
 
 ```
 TODO: the run of bash script for Windows
