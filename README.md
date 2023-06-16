@@ -303,8 +303,7 @@ Check that the package is installed with
 parallel --version
 ```
 
-3. To parallelize your `job.sh` file, first you need to split it using this command, so we can use the same strategy
-as was described above, not multiprocessing writing files to directories before creating those:
+To parallelize your `jobs.sh` file, we need to split it into blocks that can be parallelized.
 
 ```bash
 python split-file.py <your_file.sh>
