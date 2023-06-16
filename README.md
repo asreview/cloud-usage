@@ -268,8 +268,8 @@ Of course, if you modify the `.sh` or `.py` files, you have to build the corresp
 > However, if you run into a "Project already exists" error, this is why.
 
 ## Lightweight usage
-In case you want to test how much your given task can be speed-up with parallelization strategy, 
-it is possible to test it utilizing functionality of [GNU Project package](https://www.gnu.org/software/parallel). For such type test follow these steps:
+If you want to use parallelization, but can't, or don't want to, use Kubernetes, it is possible to use [GNU Project package](https://www.gnu.org/software/parallel) to parallelize the execution of the script locally.
+For such usage follow these steps:
 
 1. Download and install the GNU package following the instructions. We recommend to install the package via package managers if you have one (such as `homebrew` or `chocolatte`), but in case you do not have one you can follow this steps, which are a bit more complicated, but the effect worths it.
 
