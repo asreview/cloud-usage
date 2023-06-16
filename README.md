@@ -287,7 +287,7 @@ Run those commands `parallel-*` will be a downloaded file with a number instead 
 
 ```bash
 wget https://ftp.gnu.org/gnu/parallel/parallel-latest.tar.bz2
-sudo tar -xjf parallel-latest.tar.bz2
+tar -xjf parallel-latest.tar.bz2
 cd parallel-NUMBER
 ./configure
 sudo make
