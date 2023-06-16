@@ -310,9 +310,13 @@ python split-file.py <your_file.sh>
 ```
 
 Then you can just run the script below, specifying the number of cores as an argument.
-We recommend not using all of your CPU cores at once.
-Leave at least one or two to allow your machine to process other tasks.
-Notice that there is no limitation on memory usage per task, so for models that use a lot of memory, there might be some competition for resources.
+> **Warning**
+> We recommend not using all of your CPU cores at once.
+> Leave at least one or two to allow your machine to process other tasks.
+> Notice that there is no limitation on memory usage per task, so for models that use a lot of memory, there might be some competition for resources.
+
+
+
    
 ```bash
 bash parallel_run.sh <the_number_of_cores>
