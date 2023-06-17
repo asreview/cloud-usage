@@ -314,6 +314,7 @@ Then you can just run the script below, specifying the number of cores as an arg
 
 ```bash
 bash parallel_run.sh <the_number_of_cores>
+```
 
 ## Troubleshooting and FAQ
 
