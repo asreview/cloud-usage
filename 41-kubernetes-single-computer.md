@@ -120,3 +120,13 @@ volumes:
     persistentVolumeClaim:
       claimName: asreview-storage
 ```
+
+## Multi-node minikube
+
+If you are using a multi-node minikube setup (for testing reasons, hopefully), also run the following:
+
+```bash
+minikube addons disable storage-provisioner
+kubectl delete storageclasses.storage.k8s.io standard
+kubectl apply -f kubevirt-hostpath-provisioner.yml
+```

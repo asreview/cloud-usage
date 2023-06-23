@@ -59,3 +59,11 @@ volumes:
       server: NFS_SERVICE_IP
       path: "/"
 ```
+
+## StorageClass provisioner
+
+If your cluster does not have a StorageClass provisioner, you can try the following:
+
+```bash
+kubectl apply -f kubevirt-hostpath-provisioner.yml
+```
