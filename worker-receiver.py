@@ -89,13 +89,17 @@ class Worker:
         ch.basic_publish("", routing_key=properties.reply_to, body=body)
         ch.basic_ack(delivery_tag=method.delivery_tag)
 
-        if self.s3 is not None:
-            if "asreview metrics" in cmd:
-                # Extract the metrics.
-                split_cmd = cmd.split()
-                idx = split_cmd.index("-o")
-                metrics_file = split_cmd[idx + 1]
-                self.upload_to_s3(metrics_file, s3_prefix)
+        try:
+            if self.s3 is not None:
+                if "asreview metrics" in cmd:
+                    # Extract the metrics.
+                    split_cmd = cmd.split()
+                    idx = split_cmd.index("-o")
+                    metrics_file = split_cmd[idx + 1]
+                    self.upload_to_s3(metrics_file, s3_prefix)
+        except Exception as err:
+            print("Error sending data to S3:")
+            print(err)
 
     def upload_to_s3(self, local_name, s3_prefix, s3_name=None):
         if s3_name is None:

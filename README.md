@@ -123,6 +123,14 @@ cd asreview-cloud
 
 From here on, we will need files inside the `asreview-cloud` repo.
 
+## Create a namespace for asreview things
+
+The configuration files use the namespace `asreview-cloud` by default, so if you want to change it, you need to change in the file below and all other places that have `# namespace: asreview-cloud`.
+
+```bash
+kubectl apply -f asreview-cloud-namespace.yml
+```
+
 ## Start RabbitMQ configuration
 
 Run
@@ -181,7 +189,7 @@ kubectl apply -f storage-nfs.yml
 Then, run
 
 ```bash
-kubectl get services
+kubectl -n asreview-cloud get services
 ```
 
 You should see something like
@@ -315,7 +323,7 @@ Similarly, you should see a `tasker` pod, and you can follow its log.
 
 ### Local
 
-If you used a local voluem, you can copy the `output` folder from the volume with
+If you used a local volume, you can copy the `output` folder from the volume with
 
 ```bash
 kubectl cp asreview-worker-FULL-NAME:/app/workdir/output ./output
@@ -331,7 +339,7 @@ The easiest way to manipulate the output when you have an NFS server is to mount
 Run the following command in a terminal:
 
 ```bash
-kubectl port-forward nfs-server-FULL-NAME 2049
+kubectl -n asreview-cloud port-forward nfs-server-FULL-NAME 2049
 ```
 
 In another terminal, run
@@ -438,14 +446,14 @@ Looking at the logs of the worker should give insight in the real issue.
 To verify if you have a queue issue, run
 
 ```bash
-kubectl exec rabbitmq-server-0 -- rabbitmqctl list_queues
+kubectl -n asreview-cloud  exec rabbitmq-server-0 -- rabbitmqctl list_queues
 ```
 
 If any of the queues has more than 0 messages, then this confirms the issue.
 Delete the queue with messages:
 
 ```bash
-kubectl exec rabbitmq-server-0 -- rabbitmqctl delete_queue asreview_queue
+kubectl -n asreview-cloud  exec rabbitmq-server-0 -- rabbitmqctl delete_queue asreview_queue
 ```
 
 You should see the workers go back to "Running" state.
