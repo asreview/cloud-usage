@@ -143,6 +143,35 @@ kubectl apply -f volume.yml
 The volume contains a `StorageClass`, a `PersistentVolume`, and a `PersistentVolumeClaim`.
 It uses a local storage inside `minikube`, and it assumes that **2 GB** are sufficient for the project.
 
+## S3 storage (_Optional step_)
+
+You might want to setup S3 storage for some files after running the simulation.
+You have to find your own S3 service, e.g. AWS S3 or Scaleway - looks like you can use [Scaleway](https://scaleway.com) for free under some limitations, but do that under your own risk.
+
+After setting up S3 storage, edit the `s3-secret.yml` file with the relevant values.
+The file must store the base 64 encoded strings, not the raw strings.
+To encode, use
+
+```bash
+echo -n 'WHATEVER' | base64
+```
+
+Copy that value and paste in the appropriate field of the file.
+
+Finally, run the secret:
+
+```bash
+kubectl apply -f s3-secret.yml
+```
+
+Edit the `worker.yml` file and uncomment the lines related to S3.
+
+By default, only the metrics file are uploaded to S3.
+Edit `worker-receiver.py` to change that.
+
+By default, the prefix of the folder on S3 is the date and time.
+To change that, edit `tasker.sh`.
+
 ## Prepare the tasker script and Docker image
 
 The `tasker.sh` defines everything that will be executed by the tasker, and indirectly by the workers.

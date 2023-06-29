@@ -37,6 +37,26 @@ spec:
               value: rabbitmq
             - name: RABBITMQ_PORT
               value: "5672"
+            # - name: S3_REGION_NAME
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: s3-secret
+            #       key: S3_REGION_NAME
+            # - name: S3_ENDPOINT_URL
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: s3-secret
+            #       key: S3_ENDPOINT_URL
+            # - name: S3_AWS_ACCESS_KEY_ID
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: s3-secret
+            #       key: S3_AWS_ACCESS_KEY_ID
+            # - name: S3_AWS_SECRET_ACCESS_KEY
+            #   valueFrom:
+            #     secretKeyRef:
+            #       name: s3-secret
+            #       key: S3_AWS_SECRET_ACCESS_KEY
       restartPolicy: Always
       volumes:
         - name: asreview-storage

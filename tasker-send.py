@@ -9,6 +9,8 @@ RABBITMQ_PORT = int(os.environ.get("RABBITMQ_PORT", "5672"))
 RABBITMQ_USER = os.environ.get("RABBITMQ_USER", "guest")
 RABBITMQ_PASS = os.environ.get("RABBITMQ_PASS", "guest")
 
+S3_PREFIX = os.environ.get("S3_PREFIX", "")
+
 
 class Tasker(object):
     def __init__(self, filename):
@@ -42,7 +44,7 @@ class Tasker(object):
                 channel.basic_publish(
                     exchange="",
                     routing_key="asreview_queue",
-                    body=message,
+                    body=f"{S3_PREFIX}+++{message}",
                     properties=pika.BasicProperties(
                         delivery_mode=pika.spec.PERSISTENT_DELIVERY_MODE,
                         reply_to="tasker",
