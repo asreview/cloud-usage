@@ -2,6 +2,7 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: tasker
+  namespace: asreview-cloud
 spec:
   # ttlSecondsAfterFinished: 30 # Automatically delete after 30 seconds
   template:
