@@ -32,5 +32,8 @@ spec:
       restartPolicy: OnFailure
       volumes:
         - name: asreview-storage
-          persistentVolumeClaim:
-            claimName: asreview-storage
+          # nfs:
+          #   server: <FIXME>
+          #   path: "/"
+          # persistentVolumeClaim:
+          #   claimName: asreview-storage

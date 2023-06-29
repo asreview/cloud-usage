@@ -17,8 +17,8 @@ spec:
           image: abelsiqueira/worker
           resources:
             limits:
-              memory: "2048Mi"
-              cpu: "1000m"
+              memory: "4Gi"
+              cpu: "1"
           volumeMounts:
             - name: asreview-storage
               mountPath: /app/workdir
@@ -60,5 +60,8 @@ spec:
       restartPolicy: Always
       volumes:
         - name: asreview-storage
-          persistentVolumeClaim:
-            claimName: asreview-storage
+          # nfs:
+          #   server: <FIXME>
+          #   path: "/"
+          # persistentVolumeClaim:
+          #   claimName: asreview-storage

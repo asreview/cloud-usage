@@ -133,15 +133,77 @@ kubectl apply -f rabbitmq.yml
 
 ## Create a volume
 
-The volume is necessary to hold the `data`, `scripts`, and the `output`.
+To share data between the worker and taskers, and to keep that data after using it, we need to create a volume.
+The volume is necessary to hold the `data`, `scripts`, and the `output`, for instance.
+
+If you are using a single node (e.g., on SURF), you can use the local configuration.
+Otherwise, we show below how to set up a NFS server using Kubernetes resources.
+You can, naturally, use other Kubernetes volume options, as long as they accept `ReadWriteMany`, however we won't show how to configure that.
+
+### Local
+
+It you have a single node, you need to create the storage folder on the node.
+Below we have the command for `minikube`.
 
 ```bash
 minikube ssh -- sudo mkdir -p /mnt/asreview-storage
-kubectl apply -f volume.yml
 ```
 
-The volume contains a `StorageClass`, a `PersistentVolume`, and a `PersistentVolumeClaim`.
+Then, run
+
+```bash
+kubectl apply -f storage-local.yml
+```
+
+The `storage-local.yml` file contains a `StorageClass`, a `PersistentVolume`, and a `PersistentVolumeClaim`.
 It uses a local storage inside `minikube`, and it assumes that **2 GB** are sufficient for the project.
+Change as necessary.
+
+Then, uncomment the `worker.yml` and `tasker.yml` relevant part at the `volumes` section in the end.
+For this case, it should look like
+
+```yml
+volumes:
+  - name: asreview-storage
+    persistentVolumeClaim:
+      claimName: asreview-storage
+```
+
+### NFS
+
+The file `storage-nfs.yml` will run an NFS server inside one of the nodes.
+Simple run
+
+```bash
+kubectl apply -f storage-nfs.yml
+```
+
+Then, run
+
+```bash
+kubectl get services
+```
+
+You should see something like
+
+```plaintext
+NAME             TYPE        CLUSTER-IP       EXTERNAL-IP   PORT(S)                        AGE
+...
+nfs-service      ClusterIP   NFS_SERVICE_IP   <none>        2049/TCP,20048/TCP,111/TCP     82m
+...
+```
+
+Copy the `NFS_SERVICE_IP`.
+Then, uncomment the `worker.yml` and `tasker.yml` relevant part at the `volumes` section in the end.
+For this case, it should look like
+
+```yml
+volumes:
+  - name: asreview-storage
+    nfs:
+      server: NFS_SERVICE_IP
+      path: "/"
+```
 
 ## S3 storage (_Optional step_)
 
@@ -249,9 +311,11 @@ kubectl apply -f tasker.yml
 
 Similarly, you should see a `tasker` pod, and you can follow its log.
 
-## Copying the output out of the minikube to your machine
+## Retrieving the output
 
-You can copy the `output` folder from the volume with
+### Local
+
+If you used a local voluem, you can copy the `output` folder from the volume with
 
 ```bash
 kubectl cp asreview-worker-FULL-NAME:/app/workdir/output ./output
@@ -260,6 +324,31 @@ kubectl cp asreview-worker-FULL-NAME:/app/workdir/output ./output
 Also, check the `/app/workdir/issues` folder.
 It should be empty, because it contains errors while running the simulate code.
 If it is not empty, the infringing lines will be shown.
+
+### NFS
+
+The easiest way to manipulate the output when you have an NFS server is to mount the NFS server.
+Run the following command in a terminal:
+
+```bash
+kubectl port-forward nfs-server-FULL-NAME 2049
+```
+
+In another terminal, run
+
+```bash
+mkdir asreview-storage
+sudo mount -v -o vers=4,loud localhost:/ asreview-storage
+```
+
+Copy things out as necessary.
+When you're done, run
+
+```bash
+sudo umount asreview-storage
+```
+
+And hit CTRL-C on the running `kubectl port-forward` command.
 
 ## Deleting and restarting
 
@@ -278,14 +367,8 @@ You can delete it the same way as you did the workers, but using `tasker.yml`.
 
 You can then delete the `volume.yml` and the `rabbit.yml`, but if you are running new tests, you don't need to.
 
-Since the volume is mounted in the minikube, you don't lose the data, and you can run the workers again and inspect or copy them out, if you forgot.
+Since the volume is mounted separately, you don't lose the data.
 You will lose the execution log, though.
-
-If you want to delete everything in the volume as well, you can run
-
-```bash
-minikube ssh -- sudo rm -rf /mnt/asreview-storage/*
-```
 
 Running everything again is simply a matter of using `kubectl apply` again.
 Of course, if you modify the `.sh` or `.py` files, you have to build the corresponding docker image again.
