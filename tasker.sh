@@ -21,7 +21,13 @@ function log {
 
 # Run makita
 log "Running makita"
+
 asreview makita template arfi -f jobs.sh
+# Define the S3_PREFIX, using whatever you think makes sense.
+# This file is run exactly once, to it makes sense to use the date.
+# You could also use the settings, if any.
+S3_PREFIX="$(date --iso=seconds)"
+export S3_PREFIX
 
 # Split the `jobs.sh` file
 log "Splitting file"

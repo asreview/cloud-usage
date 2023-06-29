@@ -4,7 +4,7 @@ RUN apt-get update && \
     apt-get install -y curl ca-certificates amqp-tools python \
        --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
-    && pip install pika
+    && pip install boto3 pika
 
 #### Don't modify above this line
 
@@ -12,7 +12,7 @@ RUN apt-get update && \
 # RUN pip install --user sentence-transformers~=2.2.2
 
 # For doc2vec:
-RUN pip install --user gensim~=4.2.0
+# RUN pip install --user gensim~=4.2.0
 
 #### Don't modify below this line
 
