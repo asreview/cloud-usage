@@ -269,7 +269,6 @@ Of course, if you modify the `.sh` or `.py` files, you have to build the corresp
 
 ## Lightweight usage
 
-
 If you want to use parallelization, but can't, or don't want to, use Kubernetes, it is possible to use [GNU Project package](https://www.gnu.org/software/parallel) to parallelize the execution of the script locally.
 For such usage follow these steps:
 
@@ -282,7 +281,8 @@ We recommend installing the package via package managers if you have one (such a
 
 In case you do not have one, you can follow the steps below:
 
-* If you are using UNIX based system(Linux or MacOS),you are going to need `wget`.
+- If you are using UNIX based system(Linux or MacOS),you are going to need `wget`.
+
 Run those commands `parallel-*` will be a downloaded file with a number instead of '*':
 
 ```bash

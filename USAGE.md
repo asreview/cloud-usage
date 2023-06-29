@@ -5,11 +5,7 @@ If necessary, extra files will be provide in the folder [examples](examples).
 Be sure to read the [README](README.md) first.
 This file only supplements the README and it is not supposed to be enough to quickstart.
 
-By the way, if you are only testing and don't have a data set yet, you can download one from [asreview-makita](https://raw.githubusercontent.com/asreview/asreview-makita/main/examples/arfi_example/data/ptsd.csv) using `wget`:
-
-```bash
-wget https://raw.githubusercontent.com/asreview/asreview-makita/main/examples/arfi_example/data/ptsd.csv
-```
+By the way, if you are only testing and don't have a data set yet, you can download one from [asreview-makita](https://github.com/asreview/asreview-makita/blob/8272698e6114106c1f44cfcf7ed85c92ba50d13a/examples/arfi_example/data/van_de_Schoot_2018.csv).
 
 ## Provide only data and run makita on the cloud
 
