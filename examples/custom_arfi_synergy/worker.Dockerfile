@@ -18,7 +18,7 @@ RUN pip install gensim~=4.2.0
 # RUN pip install https://github.com/jteijema/asreview-reusable-fe/archive/main.zip
 # RUN pip install https://github.com/jteijema/asreview-XGBoost/archive/main.zip
 
-# For neural netowrk
+# For neural network
 # RUN pip install tensorflow~=2.9.1
 
 #### Don't modify below this line

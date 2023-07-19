@@ -14,7 +14,7 @@ RUN apt-get update && \
     apt-get install -y git \
        --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
-    && pip install git+https://github.com/abelsiqueira/asreview-makita@29-fix-broken-comment-line
+    && pip install asreview-makita
 #### Don't modify below this line
 
 COPY ./split-file.py /app/split-file.py
