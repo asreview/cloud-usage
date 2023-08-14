@@ -79,6 +79,14 @@ minikube start --cpus CPU_NUMBER --memory HOW_MUCH_MEMORY
 The `CPU_NUMBER` argument is the number of CPUs you want to dedicate to `minikube`.
 The `HOW_MUCH_MEMORY` argument is how much memory.
 
+## Create a namespace for asreview things
+
+The configuration files use the namespace `asreview-cloud` by default, so if you want to change it, you need to change in the file below and all other places that have `# namespace: asreview-cloud`.
+
+```bash
+kubectl apply -f asreview-cloud-namespace.yml
+```
+
 ## Create a volume
 
 To share data between the worker and taskers, and to keep that data after using it, we need to create a volume.
@@ -112,15 +120,3 @@ volumes:
     persistentVolumeClaim:
       claimName: asreview-storage
 ```
-
-### Retrieving the output
-
-You can copy the `output` folder from the volume with
-
-```bash
-kubectl cp asreview-worker-FULL-NAME:/app/workdir/output ./output
-```
-
-Also, check the `/app/workdir/issues` folder.
-It should be empty, because it contains errors while running the simulate code.
-If it is not empty, the infringing lines will be shown.

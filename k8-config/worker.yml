@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: c
-          image: abelsiqueira/worker
+          image: YOURUSER/worker
           resources:
             limits:
               memory: "4Gi"

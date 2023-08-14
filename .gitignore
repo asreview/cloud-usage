@@ -3,3 +3,7 @@ env
 output
 scripts
 synergy
+
+credentials.yml
+tmp*
+jobs.sh.part*

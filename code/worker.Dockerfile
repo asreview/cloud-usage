@@ -1,7 +1,7 @@
-FROM ghcr.io/asreview/asreview:v1.2
+FROM ghcr.io/asreview/asreview:v1.2.1
 
 RUN apt-get update && \
-    apt-get install -y curl ca-certificates amqp-tools python \
+    apt-get install -y curl ca-certificates amqp-tools python3 \
        --no-install-recommends \
     && rm -rf /var/lib/apt/lists/* \
     && pip install boto3 pika
