@@ -21,10 +21,10 @@ For instance, we could write
 
 ## Execution script
 
-Now, download the file `many-jobs.sh`:
+Now, download the file [many-jobs.sh](code/many-jobs.sh):
 
 ```bash
-wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/many-jobs.sh
+wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/code/many-jobs.sh
 ```
 
 This file should contain something like

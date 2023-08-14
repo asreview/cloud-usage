@@ -39,12 +39,12 @@ parallel --version
 ## Running jobs.sh in parallel
 
 To parallelize your `jobs.sh` file, we need to split it into blocks that can be parallelized.
-To do that, we need the `split-file.py` script included in this repo.
+To do that, we need the [split-file.py](code/split-file.py) script included in this repo.
 
 To directly download it from the internet, you can issue the following command:
 
 ```bash
-wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/split-file.py
+wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/code/split-file.py
 ```
 
 Now run the following to split on the jobs.sh file into three files:
@@ -61,11 +61,11 @@ The rest of the useful lines (non-empty and not comments) constitute the third p
 Each part must finish before the next is run, and the first part must be run sequentially.
 The other two parts can be run using `parallel`.
 
-To simplify your usage, we have created the script `parallel_run.sh`.
+To simplify your usage, we have created the script [parallel_run.sh](code/parallel_run.sh).
 Download it issuing
 
 ```bash
-wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/parallel_run.sh
+wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/code/parallel_run.sh
 ```
 
 Then you can just run the script below, specifying the number of cores as an argument.
