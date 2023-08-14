@@ -33,19 +33,19 @@ Each of these pods run a Docker image that install necessary packages.
 Each of these images run a bash file.
 Each bash file uses a python script and the Python package [pika](https://pika.readthedocs.io/en/stable/) to send and receive messages.
 
-In the Worker case, the [Worker Dockerfile](worker.Dockerfile) must have the packages to run the models that you need to run, in addition to some basic things, and it runs the Worker bash file.
-The [Worker bash file](worker.sh) just runs the [Worker receiver](worker-receiver.py) file.
+In the Worker case, the [Worker Dockerfile](code/worker.Dockerfile) must have the packages to run the models that you need to run, in addition to some basic things, and it runs the Worker bash file.
+The [Worker bash file](code/worker.sh) just runs the [Worker receiver](code/worker-receiver.py) file.
 The Worker receiver keeps the Worker alive waiting for messages; runs received messages as commands; tells the Tasker that it is done with a message; and sends files to S3, if configured to do so.
 
-In the Tasker case, the [Tasker Dockerfile](tasker.Dockerfile) only needs the basic things, and it runs the Tasker bash file.
-The [Tasker bash file](tasker.sh) is responsible for very important tasks.
+In the Tasker case, the [Tasker Dockerfile](code/tasker.Dockerfile) only needs the basic things, and it runs the Tasker bash file.
+The [Tasker bash file](code/tasker.sh) is responsible for very important tasks.
 It starts by cleaning up the volume and moving files to the correct location inside it.
 Then, it runs whatever you need it to run, and this is where you have to edit to do what you need.
 
-In the default case, the Tasker bash file runs makita once, then splits the file using the [split-file.py](split-file.py) script that we mentioned before.
-Then it runs the first part itself (which can't be parallelized), and sends the next two parts to the Workers using the script <tasker-send.py>.
+In the default case, the Tasker bash file runs makita once, then splits the file using the [split-file.py](code/split-file.py) script that we mentioned before.
+Then it runs the first part itself (which can't be parallelized), and sends the next two parts to the Workers using the script [tasker-send.py](code/tasker-send.py).
 
-The <tasker-send.py> script sends each line of the input file to the Workers as messages, and then waits for all messages to be completed.
+The [tasker-send.py](code/tasker-send.py) script sends each line of the input file to the Workers as messages, and then waits for all messages to be completed.
 This ensures that the part 2 is completed before part 3 starts being executed.
 
 We have created a visual representation below:
@@ -66,6 +66,10 @@ git clone https://github.com/abelsiqueira/asreview-cloud
 cd asreview-cloud
 ```
 
+All the `.yml` files that you need to run below are inside the `k8-config` folder.
+The Dockerfiles and scripts are inside `code`.
+Remember to change to the correct folder as necessary.
+
 First, follow the specific guides to setup your local computer or cluster:
 
 - [Single computer](41-kubernetes-single-computer.md)
@@ -74,7 +78,7 @@ First, follow the specific guides to setup your local computer or cluster:
 ## Install RabbitMQ
 
 We need to install and run RabbitMQ on Kubernetes.
-Run the following command taken from [RabbitMQ Cluster Operator](https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html), and then the `rabbitmq.yml` service.
+Run the following command taken from [RabbitMQ Cluster Operator](https://www.rabbitmq.com/kubernetes/operator/quickstart-operator.html), and then the [rabbitmq.yml](k8-config/rabbitmq.yml) service.
 
 ```bash
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
@@ -101,7 +105,7 @@ kubectl apply -f rabbitmq.yml
 You might want to setup S3 storage for some files after running the simulation.
 You have to find your own S3 service, e.g. AWS S3 or Scaleway - looks like you can use [Scaleway](https://scaleway.com) for free under some limitations, but do that under your own risk.
 
-After setting up S3 storage, edit the `s3-secret.yml` file with the relevant values.
+After setting up S3 storage, edit the [s3-secret.yml](k8-config/s3-secret.yml) file with the relevant values.
 The file must store the base 64 encoded strings, not the raw strings.
 To encode, use
 
@@ -117,18 +121,18 @@ Finally, run the secret:
 kubectl apply -f s3-secret.yml
 ```
 
-Edit the `worker.yml` file and uncomment the lines related to S3.
+Edit the [worker.yml](k8-config/worker.yml) file and uncomment the lines related to S3.
 
 By default, only the metrics file are uploaded to S3.
-Edit `worker-receiver.py` to change that.
+Edit [worker-receiver.py](code/worker-receiver.py) to change that.
 
 By default, the prefix of the folder on S3 is the date and time.
-To change that, edit `tasker.sh`.
+To change that, edit [tasker.sh](code/tasker.sh).
 
 ## Prepare the tasker script and Docker image
 
-The `tasker.sh` defines everything that will be executed by the tasker, and indirectly by the workers.
-The `tasker.Dockerfile` will create the image that will be executed in the tasker pod.
+The [tasker.sh](code/tasker.sh) defines everything that will be executed by the tasker, and indirectly by the workers.
+The [tasker.Dockerfile](code/tasker.Dockerfile) will create the image that will be executed in the tasker pod.
 You can modify these as you see fit.
 After you are done, compile and push the image:
 
@@ -148,9 +152,9 @@ docker push YOURUSER/tasker
 
 ## Prepare the worker script and Docker image
 
-The `worker.sh` defines a very short list of tasks: running `worker-receiver.py`.
-You can do other things before that, but tasks that are meant to be run before **all** workers start working should go on `tasker.sh`.
-The `worker-receiver.py` runs continuously, waiting for new tasks from the tasker.
+The [worker.sh](code/worker.sh) defines a very short list of tasks: running [worker-receiver.py](code/worker-receiver.py).
+You can do other things before that, but tasks that are meant to be run before **all** workers start working should go on [tasker.sh](code/tasker.sh).
+The [worker-receiver.py](code/worker-receiver.py) runs continuously, waiting for new tasks from the tasker.
 
 ```bash
 docker build -t YOURUSER/worker -f worker.Dockerfile .
@@ -159,7 +163,7 @@ docker push YOURUSER/worker
 
 ## Running the workers
 
-The file `worker.yml` contains the configuration of the deployment of the workers.
+The file [worker.yml](k8-config/worker.yml) contains the configuration of the deployment of the workers.
 Change the `image` to reflect the path to the image that you pushed.
 You can select the number of `replicas` to change the number of workers.
 Pay attention to the resource limits, and change as you see fit.
@@ -192,7 +196,7 @@ Logging as ...
 
 ## Running the tasker
 
-Similarly, the `tasker.yml` allows you to run the tasker as a Kubernetes job.
+Similarly, the [tasker.yml](k8-config/tasker.yml) allows you to run the tasker as a Kubernetes job.
 Change the `image`, and optionally add a `ttlSecondsAfterFinished` to auto delete the task - I prefer to keep it until I review the log.
 Run
 
@@ -215,9 +219,9 @@ kubectl delete -f worker.yml
 ```
 
 If you did not set a `ttlSecondsAfterFinished` for the tasker, it will keep existing, although not running.
-You can delete it the same way as you did the workers, but using `tasker.yml`.
+You can delete it the same way as you did the workers, but using [tasker.yml](k8-config/tasker.yml).
 
-You can then delete the `volume.yml` and the `rabbit.yml`, but if you are running new tests, you don't need to.
+You can then delete the volume and the [rabbitmq.yml](k8-config/rabbitmq.yml), but if you are running new tests, you don't need to.
 
 Since the volume is mounted separately, you don't lose the data.
 You will lose the execution log, though.

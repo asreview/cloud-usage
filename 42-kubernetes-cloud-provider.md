@@ -18,7 +18,7 @@ The volume is necessary to hold the `data`, `scripts`, and the `output`, for ins
 If you have some volume provider that accepts `ReadWriteMany`, use that.
 Otherwise, we show below how to set up a NFS server using Kubernetes resources, and then how to use that server as volume for your pods.
 
-The file `storage-nfs.yml` will run an NFS server inside one of the nodes.
+The file [storage-nfs.yml](k8-config/storage-nfs.yml) will run an NFS server inside one of the nodes.
 Simple run
 
 ```bash
@@ -41,7 +41,7 @@ nfs-service      ClusterIP   NFS_SERVICE_IP   <none>        2049/TCP,20048/TCP,1
 ```
 
 Copy the `NFS_SERVICE_IP`.
-Then, uncomment the `worker.yml` and `tasker.yml` relevant part at the `volumes` section in the end.
+Then, uncomment the [worker.yml](k8-config/worker.yml) and [tasker.yml](k8-config/tasker.yml) relevant part at the `volumes` section in the end.
 For this case, it should look like
 
 ```yml

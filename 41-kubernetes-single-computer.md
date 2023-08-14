@@ -99,11 +99,11 @@ Then, run
 kubectl apply -f storage-local.yml
 ```
 
-The `storage-local.yml` file contains a `StorageClass`, a `PersistentVolume`, and a `PersistentVolumeClaim`.
+The [storage-local.yml](k8-config/storage-local.yml) file contains a `StorageClass`, a `PersistentVolume`, and a `PersistentVolumeClaim`.
 It uses a local storage inside `minikube`, and it assumes that **2 GB** are sufficient for the project.
 Change as necessary.
 
-Then, uncomment the `worker.yml` and `tasker.yml` relevant part at the `volumes` section in the end.
+Then, uncomment the [worker.yml](k8-config/worker.yml) and [tasker.yml](k8-config/tasker.yml) relevant part at the `volumes` section in the end.
 For this case, it should look like
 
 ```yml
