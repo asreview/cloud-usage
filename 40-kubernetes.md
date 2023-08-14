@@ -70,6 +70,8 @@ All the `.yml` files that you need to run below are inside the `k8-config` folde
 The Dockerfiles and scripts are inside `code`.
 Remember to change to the correct folder as necessary.
 
+## Specific preparation
+
 First, follow the specific guides to setup your local computer or cluster:
 
 - [Single computer](41-kubernetes-single-computer.md)
@@ -84,20 +86,18 @@ Run the following command taken from [RabbitMQ Cluster Operator](https://www.rab
 kubectl apply -f "https://github.com/rabbitmq/cluster-operator/releases/latest/download/cluster-operator.yml"
 ```
 
-## Create a namespace for asreview things
-
-The configuration files use the namespace `asreview-cloud` by default, so if you want to change it, you need to change in the file below and all other places that have `# namespace: asreview-cloud`.
-
-```bash
-kubectl apply -f asreview-cloud-namespace.yml
-```
-
 ## Start RabbitMQ configuration
 
 Run
 
 ```bash
 kubectl apply -f rabbitmq.yml
+```
+
+Check that the `rabbitmq-server-0` pod starts running after a minute or two:
+
+```bash
+kubectl -n asreview-cloud get pods
 ```
 
 ## S3 storage (_Optional step_)
@@ -134,12 +134,62 @@ To change that, edit [tasker.sh](code/tasker.sh).
 The [tasker.sh](code/tasker.sh) defines everything that will be executed by the tasker, and indirectly by the workers.
 The [tasker.Dockerfile](code/tasker.Dockerfile) will create the image that will be executed in the tasker pod.
 You can modify these as you see fit.
-After you are done, compile and push the image:
+
+The default commands used inside the tasker script and Dockerfile assume that you are:
+
+- simulating using data from a `data` folder.
+- running various settings, classifiers, and/or feature extractors.
+- running a custom ARFI template.
+- aggregating all jobs.sh into a single one.
+
+### Data
+
+If you are providing the data, create a `data` folder inside the `code` folder and put your csv files in there.
 
 > **Warning**
 >
-> The default tasker assumes that a data folder exists with your data.
-> Make sure to either provide the data or change the tasker and Dockerfile.
+> Don't skip this part, you either need to create a data folder, or change below.
+
+If, instead, you want to use the Synergy data set, edit [tasker.Dockerfile](code/tasker.Dockerfile) and look for the relevant lines.
+
+### Settings, classifiers and feature extractors
+
+Like we did for the use case ["Running many jobs.sh files one after the other"](30-many-jobs.md), each line of the file [makita-args.txt](code/makita-args.txt) contains a different setting that you can pass to the asreview command.
+
+By default, we are running `-m logistic -e tfidf` and `-m nb -e tfidf`.
+Edit the file if you want to change or add more.
+
+### Custom ARFI template
+
+We also assume that we are running a custom ARFI template [custom_arfi.txt.template](code/custom_arfi.txt.template).
+The template contains placeholder values related to the settings mentioned in the section above.
+The placeholder `SETTINGS_PLACEHOLDER` will be substituded by each line of the [makita-args.txt](code/makita-args.txt) file.
+The placeholder `SETTINGS_DIR` is used to create a folder one level above the data.
+By default, the value of `SETTINGS_DIR` is equal to `SETTINGS_PLACEHOLDER`, except that spaces are substituded by `_`.
+
+This template also removes some unnecessary lines for our case (such as creating images and aggregating the results).
+
+Furthermore, it runs a new command `rm -f ...` to remove the `.asreview` project file after use.
+This ensures that the disk space does not grow to absurd proportions.
+
+Finally, it moves three commands to the same line, to ensure that the same worker will run these in order:
+
+- simulate (which creates the project file);
+- create metrics using the project file;
+- delete the project file.
+
+### Aggregating all jobs.sh into a single jobs.sh file
+
+Instead of following ["Running many jobs.sh files one after the other"](30-many-jobs.md), we want to parallelize even between different jobs files.
+To do that, we aggregate all `jobs.sh` files into a single one.
+Then, when we split the file, all of the simulation calls of all jobs will be sent to the workers at the same time.
+This allows scaling the number of workers even more.
+
+To keep things organized, we create an additional folder level before the dataset, which was described in the custom template above.
+
+### Build and push
+
+After you are done with modifications, compile and push the image:
 
 ```bash
 docker build -t YOURUSER/tasker -f tasker.Dockerfile .
@@ -152,7 +202,7 @@ docker push YOURUSER/tasker
 
 ## Prepare the worker script and Docker image
 
-The [worker.sh](code/worker.sh) defines a very short list of tasks: running [worker-receiver.py](code/worker-receiver.py).
+The [worker.sh](code/worker.sh) script simply runs [worker-receiver.py](code/worker-receiver.py).
 You can do other things before that, but tasks that are meant to be run before **all** workers start working should go on [tasker.sh](code/tasker.sh).
 The [worker-receiver.py](code/worker-receiver.py) runs continuously, waiting for new tasks from the tasker.
 
@@ -161,10 +211,20 @@ docker build -t YOURUSER/worker -f worker.Dockerfile .
 docker push YOURUSER/worker
 ```
 
+> **Note**
+>
+> We have created a small script that builds and pushes both images called [build-and-push.sh](code/build-and-push.sh).
+> You can run it with `bash build-and-push.sh YOURUSER`.
+
 ## Running the workers
 
 The file [worker.yml](k8-config/worker.yml) contains the configuration of the deployment of the workers.
 Change the `image` to reflect the path to the image that you pushed.
+
+> **Warning**
+>
+> Did you change the image?
+
 You can select the number of `replicas` to change the number of workers.
 Pay attention to the resource limits, and change as you see fit.
 
@@ -198,6 +258,11 @@ Logging as ...
 
 Similarly, the [tasker.yml](k8-config/tasker.yml) allows you to run the tasker as a Kubernetes job.
 Change the `image`, and optionally add a `ttlSecondsAfterFinished` to auto delete the task - I prefer to keep it until I review the log.
+
+> **Warning**
+>
+> Did you change the image?
+
 Run
 
 ```bash
@@ -205,6 +270,43 @@ kubectl apply -f tasker.yml
 ```
 
 Similarly, you should see a `tasker` pod, and you can follow its log.
+
+## Retrieving the output
+
+You can copy the `output` folder from the volume with
+
+```bash
+kubectl -n asreview-cloud cp asreview-worker-FULL-NAME:/app/workdir/output ./output
+```
+
+Also, check the `/app/workdir/issues` folder.
+It should be empty, because it contains errors while running the simulate code.
+If it is not empty, the infringing lines will be shown.
+
+### If you used NFS
+
+When you have an NFS server you can mount it.
+Run the following command in a terminal:
+
+```bash
+kubectl -n asreview-cloud port-forward nfs-server-FULL-NAME 2049
+```
+
+In another terminal, run
+
+```bash
+mkdir asreview-storage
+sudo mount -v -o vers=4,loud localhost:/ asreview-storage
+```
+
+Copy things out as necessary.
+When you're done, run
+
+```bash
+sudo umount asreview-storage
+```
+
+And hit CTRL-C on the running `kubectl port-forward` command.
 
 ## Deleting and restarting
 

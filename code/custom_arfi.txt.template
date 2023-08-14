@@ -1,0 +1,29 @@
+---
+name: ARFI-settings
+name_long: All Relevant, Fixed Irrelevant, with settings
+
+scripts:
+  - get_plot.py
+  - merge_descriptives.py
+  - merge_metrics.py
+  - merge_tds.py
+
+docs:
+  - README.md
+
+---
+#!/bin/bash
+{# This is a template for the ARFI method #}
+# version {{ version }}
+
+{% for dataset in datasets %}
+mkdir -p {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/metrics
+mkdir -p {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/descriptives
+asreview data describe {{ dataset.input_file }} -o {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/descriptives/data_stats_{{ dataset.input_file_stem }}.json
+mkdir -p {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/state_files
+
+{% for prior in dataset.priors %}
+asreview simulate {{ dataset.input_file }} SETTINGS_PLACEHOLDER -s {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview --prior_record_id {{ " ".join(prior) }} --seed {{ dataset.model_seed }} && asreview metrics {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview -o {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/metrics/metrics_sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.json && rm -f {{ output_folder }}/simulation/SETTINGS_DIR/{{ dataset.input_file_stem }}/state_files/sim_{{ dataset.input_file_stem }}_{{ prior[0] }}.asreview
+{% endfor %}
+
+{% endfor %}
