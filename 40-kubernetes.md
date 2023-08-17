@@ -223,7 +223,7 @@ Change the `image` to reflect the path to the image that you pushed.
 
 > **Warning**
 >
-> Don't forget to change the image in the worker.yml file.
+> Make sure to change the image in the worker.yml file.
 
 You can select the number of `replicas` to change the number of workers.
 Pay attention to the resource limits, and change as you see fit.
