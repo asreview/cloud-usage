@@ -62,8 +62,8 @@ The "single computer" strategy can also be followed to test your scripts before 
 In both cases, start by cloning this repo, as you will need the configuration files provided here:
 
 ```bash
-git clone https://github.com/abelsiqueira/asreview-cloud
-cd asreview-cloud
+git clone https://github.com/asreview/cloud-usage
+cd cloud-usage
 ```
 
 All the `.yml` files that you need to run below are inside the `k8-config` folder.

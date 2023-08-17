@@ -24,7 +24,7 @@ For instance, we could write
 Now, download the file [many-jobs.sh](code/many-jobs.sh):
 
 ```bash
-wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/code/many-jobs.sh
+wget https://raw.githubusercontent.com/asreview/cloud-usage/main/code/many-jobs.sh
 ```
 
 This file should contain something like

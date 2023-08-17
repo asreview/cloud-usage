@@ -1,4 +1,4 @@
-# asreview-cloud (Running simulations on the cloud and/or in parallel)
+# Running simulations on the cloud and/or in parallel
 
 This repository houses some files to help run simulations on the cloud, i.e., outside your computer, possibly in parallel.
 We assume that you know how to run simulations on your computer using [Makita](https://github.com/asreview/asreview-makita).
