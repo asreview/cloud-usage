@@ -261,7 +261,7 @@ Change the `image`, and optionally add a `ttlSecondsAfterFinished` to auto delet
 
 > **Warning**
 >
-> Don't forget to change the image in the tasker.yml file.
+> Make sure to change the image in the tasker.yml file.
 
 Run
 
