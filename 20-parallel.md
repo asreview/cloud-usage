@@ -44,7 +44,7 @@ To do that, we need the [split-file.py](code/split-file.py) script included in t
 To directly download it from the internet, you can issue the following command:
 
 ```bash
-wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/code/split-file.py
+wget https://raw.githubusercontent.com/asreview/cloud-usage/main/code/split-file.py
 ```
 
 Now run the following to split on the jobs.sh file into three files:
@@ -65,7 +65,7 @@ To simplify your usage, we have created the script [parallel_run.sh](code/parall
 Download it issuing
 
 ```bash
-wget https://raw.githubusercontent.com/abelsiqueira/asreview-cloud/main/code/parallel_run.sh
+wget https://raw.githubusercontent.com/asreview/cloud-usage/main/code/parallel_run.sh
 ```
 
 Then you can just run the script below, specifying the number of cores as an argument.
