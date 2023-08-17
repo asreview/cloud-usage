@@ -49,7 +49,7 @@ nfs-service      ClusterIP   NFS_SERVICE_IP   <none>        2049/TCP,20048/TCP,1
 ```
 
 Copy the `NFS_SERVICE_IP`.
-Then, uncomment the [worker.yml](k8-config/worker.yml) and [tasker.yml](k8-config/tasker.yml) relevant part at the `volumes` section in the end.
+Then, uncomment the first 3 lines of the `volumes` sections of files [worker.yml](k8-config/worker.yml) and [tasker.yml](k8-config/tasker.yml) (end of the file).
 For this case, it should look like
 
 ```yml
