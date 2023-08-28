@@ -15,3 +15,7 @@ The information for running simulations on the cloud is separated in the followi
   - Use if your simulation would take a very long time.
   - Alternatively, if you have a powerfull enough computer and needs to control the cpu and memory usage.
   - This is very complicated and it usually requires a lot of time to setup and money to run on a cluster.
+
+## Acknowledgements
+
+This work was supported by the Netherlands eScience Center under grant number ODISSEI.2022.023.
