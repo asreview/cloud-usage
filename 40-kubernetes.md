@@ -115,7 +115,7 @@ echo -n 'WHATEVER' | base64
 
 Copy that value and paste in the appropriate field of the file.
 
-Finally, run the secret:
+Finally, apply the secret configuration:
 
 ```bash
 kubectl apply -f s3-secret.yml
@@ -133,7 +133,7 @@ To change that, edit [tasker.sh](code/tasker.sh).
 
 The [tasker.sh](code/tasker.sh) defines everything that will be executed by the tasker, and indirectly by the workers.
 The [tasker.Dockerfile](code/tasker.Dockerfile) will create the image that will be executed in the tasker pod.
-You can modify these as you see fit.
+You can modify these files as you see fit.
 
 The default commands used inside the tasker script and Dockerfile assume that you are:
 
@@ -223,7 +223,7 @@ Change the `image` to reflect the path to the image that you pushed.
 
 > **Warning**
 >
-> Did you change the image?
+> Make sure to change the image in the worker.yml file.
 
 You can select the number of `replicas` to change the number of workers.
 Pay attention to the resource limits, and change as you see fit.
@@ -261,7 +261,7 @@ Change the `image`, and optionally add a `ttlSecondsAfterFinished` to auto delet
 
 > **Warning**
 >
-> Did you change the image?
+> Make sure to change the image in the tasker.yml file.
 
 Run
 
